@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Antonio Gil | Perfil Artista</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="scanlines"></div> 
+
+    <nav>
+        <div class="nav-left">
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#musica">Música</a></li>
+                <li><a href="#audiovisual">Audiovisual</a></li>
+            </ul>
+        </div>
+
+        <div class="social-icons">
+            <a href="https://open.spotify.com/intl-es/artist/4WdEQjjlFafEZ5Q8nBNJSe?si=TgZK9GUVQjmF9KOacD5lLA" target="_blank" title="Spotify"><i class="fab fa-spotify"></i></a>
+            <a href="https://music.apple.com/us/artist/antonio-gil/1642577020" target="_blank" title="Apple Music"><i class="fa-solid fa-music"></i></a>
+            <a href="https://www.youtube.com/@AntonioGilopz/videos" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.instagram.com/antoniogilopz/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+    </nav>
+
+    <header id="inicio" class="hero">
+        <div class="video-overlay"></div>
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="hero.mp4" type="video/mp4">
+        </video>
+        
+        <div class="hero-content fade-in">
+            <h1 class="glitch" data-text="ANTONIO GIL">ANTONIO GIL</h1>
+            <p class="subtitle">Artista/Productor</p>
+            <p class="hero-brief">Proyecto solista de Rock Alternativo hecho por diversión.</p>
+        </div>
+    </header>
+
+    <section id="musica" class="section seccion-ancha">
+        <h2 class="section-title fade-in">Lanzamientos</h2>
+        
+        <div class="featured-release-container fade-in" id="featured-release"></div>
+
+        <div class="releases-grid fade-in" id="releases-grid"></div>
+    </section>
+
+    <div id="release-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <div class="modal-body">
+                <img id="modal-cover" src="" alt="Portada del Lanzamiento">
+                
+                <div class="modal-info">
+                    <h3 id="modal-title">Título</h3>
+                    <p id="modal-desc" class="release-desc">Descripción...</p>
+                    
+                    <div id="modal-tracklist" class="tracklist"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+            
+    <section id="audiovisual" class="section seccion-ancha">
+        <h2 class="section-title fade-in">Videos</h2>
+        
+        <div class="carousel-track fade-in" id="video-track">
+            <div class="video-item">
+                <iframe src="https://www.youtube.com/embed/SvcWgN5C3Bs?si=LixPBT5N4API7-HH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-item">
+                <iframe src="https://www.youtube.com/embed/kg5UBtzJ9f8?si=G3kyiUfqOUgPGsNW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-item">
+                <iframe src="https://www.youtube.com/embed/wxZMXbhyb9I?si=KsKTwiOADO1GYpvD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-item">
+                <iframe src="https://www.youtube.com/embed/EXHafDKjWWg?si=09rHVXCYsm3kXZbp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-item">
+                <iframe src="https://www.youtube.com/embed/ag16Lnviy34?si=hvRIea0m3ThQbeKH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-item">
+                <iframe src="https://www.youtube.com/embed/3lfsEjlbtjo?si=rQBjfdY7Rt49nLeI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="carousel-pagination fade-in" id="video-pagination"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Antonio Gil.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
