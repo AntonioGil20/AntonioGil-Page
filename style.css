@@ -679,7 +679,117 @@ audio {
 }
 
 /* ==========================================================================
-   9. RESPONSIVIDAD (MEDIA QUERIES PARA CELULARES)
+   9. PÁGINA DE DETALLE DE LANZAMIENTO
+   ========================================================================== */
+.release-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 60px;
+    margin-top: 120px; /* Deja espacio para que el menú superior no tape el contenido */
+}
+
+/* Columna Izquierda (Visual y Audio) */
+.release-media-col {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.release-media-col video, 
+.release-media-col img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+/* Columna Derecha (Historia y Proceso) */
+.release-story-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.release-story-col h1 {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.release-date {
+    font-family: var(--font-nav);
+    color: var(--accent-red);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.story-block {
+    background: rgba(20, 20, 20, 0.6);
+    padding: 25px;
+    border-left: 3px solid var(--accent-green);
+    margin-bottom: 20px;
+}
+
+.story-block h3 {
+    font-family: var(--font-nav);
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.story-block p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+/* Imágenes extra del proceso creativo */
+.process-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.process-gallery img {
+    width: 100%;
+    height: auto;
+    border: 1px solid #333;
+    filter: grayscale(50%);
+    transition: filter 0.3s;
+}
+
+.process-gallery img:hover {
+    filter: grayscale(0%);
+}
+
+/* Estilos para las listas dentro de los bloques de historia */
+.story-block ul {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #ccc;
+    margin-bottom: 15px;
+    margin-left: 25px; /* Empuja las viñetas un poco a la derecha */
+}
+
+.story-block ul li {
+    margin-bottom: 10px; /* Da un respiro entre cada canción */
+}
+
+.story-block ul li strong {
+    color: var(--text-color); /* Resalta el nombre de la canción en blanco brillante */
+}
+
+/* ==========================================================================
+   10. RESPONSIVIDAD (MEDIA QUERIES PARA CELULARES)
    ========================================================================== */
 @media (max-width: 768px) {
     /* Navegación Vertical */
