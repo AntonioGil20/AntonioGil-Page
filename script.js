@@ -1,14 +1,7 @@
 /**
  * ==========================================================================
  * ANTONIO GIL - PORTAFOLIO DE ARTISTA
- * Archivo Principal de JavaScript (Lógica e Interacción del Inicio)
- * ==========================================================================
- * * ÍNDICE DE CONTENIDO:
- * 1. Base de Datos (Discografía con URLs)
- * 2. Selección de Elementos del DOM
- * 3. Animaciones Globales y Navegación
- * 4. Renderizado de Interfaz (Destacado y Cuadrícula)
- * 5. Carrusel Audiovisual (Auto-Scroll + Paginación)
+ * Archivo Principal de JavaScript (Versión Final Corregida)
  * ==========================================================================
  */
 
@@ -16,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ==========================================================================
        1. BASE DE DATOS (DISCOGRAFÍA)
-       Aquí se almacena toda la información de los lanzamientos.
        ========================================================================== */
     const miDiscografia = [
         {
@@ -170,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
             canciones: [
                 { nombre: "01. Todo Lo Que Ocurre Bien Está En El Exterior", archivo: "canciones/Todo Lo Que Ocurre Bien Está En El Exterior.mp3" }
             ],
-            // IMPORTANTE: Recuerda cambiar este iframe por tu código Embed real de Spotify
             spotify_embed: '<iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/album/3oyUi5XpOrz2xJCRtKzgPi?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>'
         }
     ];
@@ -181,15 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const releasesGrid = document.getElementById('releases-grid');
     const featuredReleaseContainer = document.getElementById('featured-release');
 
-
     /* ==========================================================================
-       3. ANIMACIONES GLOBALES Y NAVEGACIÓN
+       3. ANIMACIONES GLOBALES
        ========================================================================== */
     const fadeElements = document.querySelectorAll('.fade-in');
-    const appearOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
-    };
+    const appearOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
 
     const appearOnScroll = new IntersectionObserver(function(entries, observer) {
         entries.forEach(entry => {
@@ -202,68 +189,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fadeElements.forEach(element => appearOnScroll.observe(element));
 
-    // Scroll suave para los enlaces de navegación
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
-
-
     /* ==========================================================================
-       4. RENDERIZADO DE INTERFAZ (CUADRÍCULA DE LANZAMIENTOS)
+       4. RENDERIZADO DE INTERFAZ (INDEX)
        ========================================================================== */
-    // Inyectar el Último Lanzamiento (Destacado)
-    const latestRelease = miDiscografia[miDiscografia.length - 1]; 
-    if (latestRelease && latestRelease.spotify_embed) {
-        featuredReleaseContainer.innerHTML = `
-            <div class="featured-badge">Último Lanzamiento</div>
-            ${latestRelease.spotify_embed}
-        `;
-    } else {
-        featuredReleaseContainer.style.display = 'none';
-    }
-
-    // Generar la cuadrícula de portadas (Grid)
-    miDiscografia.forEach(release => {
-        const item = document.createElement('div');
-        item.classList.add('release-item');
-        
-        // Verificar si hay Video Cover
-        let coverHTML = '';
-        if (release.videoCover) {
-            coverHTML = `
-                <video autoplay muted loop playsinline class="release-video-cover">
-                    <source src="${release.videoCover}" type="video/mp4">
-                    <img src="${release.portada}" alt="${release.titulo}">
-                </video>
-            `;
-        } else {
-            coverHTML = `<img src="${release.portada}" alt="${release.titulo}">`;
+    if (releasesGrid && featuredReleaseContainer) {
+        const latestRelease = miDiscografia[miDiscografia.length - 1]; 
+        if (latestRelease && latestRelease.spotify_embed) {
+            featuredReleaseContainer.innerHTML = `<div class="featured-badge">Último Lanzamiento</div>${latestRelease.spotify_embed}`;
         }
 
-        // HTML final de la tarjeta
-        item.innerHTML = `
-            ${coverHTML}
-            <div class="release-title-overlay">
-                <span class="release-title-text">${release.titulo}</span>
-                <span class="release-click-hint"><i class="fas fa-play-circle"></i> Ver Detalles</span>
-            </div>
-        `;
-        
-        // Redirigir a la página de detalle al hacer clic
-        item.addEventListener('click', () => {
-            window.location.href = release.url;
+        miDiscografia.forEach(release => {
+            const item = document.createElement('div');
+            item.classList.add('release-item');
+            let coverHTML = release.videoCover 
+                ? `<video autoplay muted loop playsinline class="release-video-cover"><source src="${release.videoCover}" type="video/mp4"><img src="${release.portada}" alt="${release.titulo}"></video>` 
+                : `<img src="${release.portada}" alt="${release.titulo}">`;
+
+            item.innerHTML = `${coverHTML}<div class="release-title-overlay"><span class="release-title-text">${release.titulo}</span><span class="release-click-hint"><i class="fas fa-play-circle"></i> Ver Detalles</span></div>`;
+            item.addEventListener('click', () => { window.location.href = release.url; });
+            releasesGrid.appendChild(item);
         });
-        
-        releasesGrid.appendChild(item);
-    });
+    }
 
     /* ==========================================================================
-       5. CARRUSEL AUDIOVISUAL (AUTO-SCROLL + PAGINACIÓN)
+       5. CARRUSEL AUDIOVISUAL
        ========================================================================== */
     const videoTrack = document.getElementById('video-track');
     const videoPagination = document.getElementById('video-pagination'); 
@@ -272,74 +221,139 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentVideoIndex = 0;
 
     if (videoTrack && videoPagination && videoItems.length > 0) {
-        // Generar Puntos de Paginación
         videoItems.forEach((_, index) => {
             const dot = document.createElement('div');
             dot.classList.add('carousel-dot');
             if (index === 0) dot.classList.add('active'); 
-            
-            // Clic en punto
             dot.addEventListener('click', () => {
                 isVideoHovered = true;
                 const targetScrollLeft = videoItems[index].offsetLeft - (videoTrack.clientWidth / 2) + (videoItems[index].clientWidth / 2);
-                videoTrack.scrollTo({
-                    left: targetScrollLeft,
-                    behavior: 'smooth'
-                });
+                videoTrack.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
                 setTimeout(() => isVideoHovered = false, 3000); 
             });
             videoPagination.appendChild(dot);
         });
 
-        // Sincronización de puntos al hacer scroll
-        function updateActiveDot() {
+        videoTrack.addEventListener('scroll', () => {
             const centerOfTrack = videoTrack.scrollLeft + (videoTrack.clientWidth / 2);
             let closestIndex = 0;
             let minDistance = Infinity;
-
             videoItems.forEach((video, index) => {
                 const videoCenter = video.offsetLeft + (video.clientWidth / 2);
                 const distance = Math.abs(centerOfTrack - videoCenter);
-
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestIndex = index;
-                }
+                if (distance < minDistance) { minDistance = distance; closestIndex = index; }
             });
-
             if (currentVideoIndex !== closestIndex) {
                 currentVideoIndex = closestIndex;
                 const dots = videoPagination.querySelectorAll('.carousel-dot');
-                dots.forEach((dot, index) => {
-                    if (index === currentVideoIndex) {
-                        dot.classList.add('active');
-                    } else {
-                        dot.classList.remove('active');
-                    }
-                });
+                dots.forEach((dot, index) => dot.classList.toggle('active', index === currentVideoIndex));
             }
-        }
-        videoTrack.addEventListener('scroll', updateActiveDot);
-
-        // Lógica de Auto-Scroll
-        videoTrack.addEventListener('mouseenter', () => isVideoHovered = true);
-        videoTrack.addEventListener('mouseleave', () => isVideoHovered = false);
-        videoTrack.addEventListener('touchstart', () => isVideoHovered = true);
-        videoTrack.addEventListener('touchend', () => {
-            setTimeout(() => isVideoHovered = false, 3000); 
         });
 
         setInterval(() => {
             if (!isVideoHovered) {
                 const scrollAmount = videoTrack.querySelector('.video-item').offsetWidth + 30; 
-                const reachedEnd = videoTrack.scrollLeft + videoTrack.clientWidth >= videoTrack.scrollWidth - 10;
-
-                if (reachedEnd) {
-                    videoTrack.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    videoTrack.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                }
+                if (videoTrack.scrollLeft + videoTrack.clientWidth >= videoTrack.scrollWidth - 10) videoTrack.scrollTo({ left: 0, behavior: 'smooth' });
+                else videoTrack.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
         }, 4000); 
     }
-});
+
+    /* ==========================================================================
+       6. FUNCIONALIDADES DETALLE (AUDIO & LIGHTBOX) - CORREGIDO
+       ========================================================================== */
+
+    // --- REPRODUCTOR DE AUDIO ---
+    const trackItems = document.querySelectorAll('.track-item');
+    trackItems.forEach(trackDiv => {
+        const audio = trackDiv.querySelector('audio');
+        const playBtn = trackDiv.querySelector('.play-btn');
+        const progressFill = trackDiv.querySelector('.progress-fill');
+        const progressBg = trackDiv.querySelector('.progress-bg');
+
+        if (playBtn && audio) {
+            playBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    document.querySelectorAll('audio').forEach(a => a.pause());
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            });
+
+            audio.addEventListener('play', () => {
+                const icon = playBtn.querySelector('i');
+                if (icon) icon.classList.replace('fa-play', 'fa-pause');
+                playBtn.style.borderColor = 'var(--accent-red)';
+                playBtn.style.color = 'var(--accent-red)';
+            });
+
+            audio.addEventListener('pause', () => {
+                const icon = playBtn.querySelector('i');
+                if (icon) icon.classList.replace('fa-pause', 'fa-play');
+                playBtn.style.borderColor = 'var(--text-color)';
+                playBtn.style.color = 'var(--text-color)';
+            });
+
+            audio.addEventListener('timeupdate', () => {
+                if (audio.duration && progressFill) {
+                    progressFill.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+                }
+            });
+
+            if (progressBg) {
+                progressBg.addEventListener('click', (e) => {
+                    const rect = progressBg.getBoundingClientRect();
+                    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+                });
+            }
+        }
+    });
+
+    // --- GALERÍA LIGHTBOX ---
+    const galleryImages = document.querySelectorAll('.process-gallery img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('close-lightbox');
+    const prevBtn = document.getElementById('prev-lightbox');
+    const nextBtn = document.getElementById('next-lightbox');
+
+    if (galleryImages.length > 0 && lightbox) {
+        let lightBoxIndex = 0;
+
+        galleryImages.forEach((img, index) => {
+            img.style.cursor = 'pointer'; 
+            img.addEventListener('click', () => {
+                lightBoxIndex = index;
+                lightboxImg.src = img.src;
+                lightbox.style.display = 'flex';
+            });
+        });
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                lightBoxIndex = (lightBoxIndex + 1) % galleryImages.length;
+                lightboxImg.src = galleryImages[lightBoxIndex].src;
+            });
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                lightBoxIndex = (lightBoxIndex - 1 + galleryImages.length) % galleryImages.length;
+                lightboxImg.src = galleryImages[lightBoxIndex].src;
+            });
+        }
+
+        const closeFunc = (e) => {
+            if (e.target === lightbox || e.target === closeBtn || e.target.closest('#close-lightbox') || e.key === 'Escape') {
+                lightbox.style.display = 'none';
+            }
+        };
+
+        lightbox.addEventListener('click', closeFunc);
+        document.addEventListener('keydown', closeFunc);
+    }
+
+}); // CIERRE ÚNICO DE DOMCONTENTLOADED
