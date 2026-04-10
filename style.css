@@ -33,6 +33,34 @@
     --font-nav: 'Oswald', sans-serif;
 }
 
+/* --- Personalización del Scrollbar --- */
+/* Tamaño de la barra */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Fondo de la barra (Track) */
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+/* Parte móvil (Thumb) */
+::-webkit-scrollbar-thumb {
+    background: var(--accent-red);
+    border-radius: 4px;
+    border: 2px solid var(--bg-color); /* Crea un pequeño margen */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-green); /* Cambia a verde al pasar el mouse */
+}
+
+/* Firefox (Estándar limitado) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-red) var(--bg-color);
+}
+
 /* ==========================================================================
    2. ESTILOS BASE & RESET
    ========================================================================== */
@@ -47,6 +75,12 @@ body {
     color: var(--text-color);
     font-family: var(--font-main);
     overflow-x: hidden;
+    animation: fadeInPage 0.8s ease-in-out;
+}
+
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* ==========================================================================
@@ -97,6 +131,25 @@ body {
     border-bottom: 2px solid var(--accent-green);
     display: inline-block;
     padding-bottom: 10px;
+}
+
+/* Capa de transición de página */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    z-index: 9999; /* Por encima de todo, incluso scanlines */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.page-transition.active {
+    opacity: 1;
+    pointer-events: all;
 }
 
 /* ==========================================================================
@@ -152,6 +205,11 @@ nav {
 
 .nav-links a:hover {
     color: var(--accent-green);
+}
+
+.nav-links a.active {
+    color: var(--accent-red); /* O el color que prefieras para resaltar */
+    border-bottom: 2px solid var(--accent-red);
 }
 
 /* Iconos de Redes Sociales */
@@ -678,6 +736,56 @@ audio {
     display: none; /* Oculta el reproductor nativo del navegador */
 }
 
+#back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none; /* Se activa con JS */
+    z-index: 1001;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+#back-to-top:hover {
+    transform: scale(1.1);
+    background: var(--accent-green);
+}
+
+/* Estilos para WaveSurfer */
+.waveform {
+    width: 100%;
+    height: 60px; /* Altura de la onda */
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+}
+
+/* Control de Volumen */
+.volume-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto; /* Empuja el volumen a la derecha */
+}
+
+.volume-slider {
+    width: 80px;
+    accent-color: var(--accent-red);
+    cursor: pointer;
+}
+
+/* Ocultar volumen en móviles pequeños para evitar amontonamiento */
+@media (max-width: 480px) {
+    .volume-container { display: none; }
+}
+
 /* ==========================================================================
    9. PÁGINA DE DETALLE DE LANZAMIENTO
    ========================================================================== */
@@ -836,6 +944,29 @@ audio {
 
 .story-block ul li strong {
     color: var(--text-color); /* Resalta el nombre de la canción en blanco brillante */
+}
+
+.release-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+    border-top: 1px solid #222;
+    margin-top: 50px;
+}
+
+.nav-btn-back, .nav-btn-next {
+    color: var(--text-color);
+    text-decoration: none;
+    font-family: var(--font-nav);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s;
+    font-size: 1.1rem;
+}
+
+.nav-btn-back:hover, .nav-btn-next:hover {
+    color: var(--accent-red);
 }
 
 /* ==========================================================================

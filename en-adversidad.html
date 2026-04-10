@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="page-transition" id="page-overlay"></div>
     <div class="scanlines"></div> 
 
     <nav>
@@ -37,44 +38,53 @@
                         <img src="portadas/EnAdversidad.jpg" alt="En Adversidad">
                     </video>
 
-                    <div class="tracklist" id="tracklist-container">
-                        <div class="track-item">
-                            <div class="track-header">
-                                <button class="play-btn"><i class="fas fa-play"></i></button>
-                                <span class="track-name">01. Ruido Blanco</span>
-                            </div>
-                            <div class="progress-bg"><div class="progress-fill"></div></div>
-                            <audio src="canciones/Ruido Blanco.mp3" preload="none"></audio>
-                        </div>
-                        
-                        <div class="track-item">
-                            <div class="track-header">
-                                <button class="play-btn"><i class="fas fa-play"></i></button>
-                                <span class="track-name">02. En Adversidad</span>
-                            </div>
-                            <div class="progress-bg"><div class="progress-fill"></div></div>
-                            <audio src="canciones/En Adversidad.mp3" preload="none"></audio>
-                        </div>
-                        
-                        <div class="track-item">
-                            <div class="track-header">
-                                <button class="play-btn"><i class="fas fa-play"></i></button>
-                                <span class="track-name">03. Sin Seguridad</span>
-                            </div>
-                            <div class="progress-bg"><div class="progress-fill"></div></div>
-                            <audio src="canciones/Sin Seguridad.mp3" preload="none"></audio>
-                        </div>
-                    </div>  
-                        <div class="process-gallery">
-                            <img src="imagenes/1.jpeg" alt="PORTADA EN PROCESO1">
-                            <img src="imagenes/2.jpeg" alt="PORTADA EN PROCESO2">
-                            <img src="imagenes/3.jpeg" alt="PORTADA EN PROCESO3">
-                            <img src="imagenes/4.jpeg" alt="PORTADA EN PROCESO4">
-                            <img src="imagenes/5.jpeg" alt="PORTADA EN PROCESO5">
-                            <img src="imagenes/6.jpeg" alt="PORTADA EN PROCESO6">
+                    <script src="https://unpkg.com/wavesurfer.js@7"></script>
 
-                            <img src="imagenes/7.jpeg" alt="REAPER">
-                        </div>
+<div class="tracklist" id="tracklist-container">
+    <div class="track-item" data-src="canciones/Ruido Blanco.mp3">
+        <div class="track-header">
+            <button class="play-btn"><i class="fas fa-play"></i></button>
+            <span class="track-name">01. Ruido Blanco</span>
+            <div class="volume-container">
+                <i class="fas fa-volume-up"></i>
+                <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+            </div>
+        </div>
+        <div class="waveform"></div>
+    </div>
+
+    <div class="track-item" data-src="canciones/En Adversidad.mp3">
+        <div class="track-header">
+            <button class="play-btn"><i class="fas fa-play"></i></button>
+            <span class="track-name">02. En Adversidad</span>
+            <div class="volume-container">
+                <i class="fas fa-volume-up"></i>
+                <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+            </div>
+        </div>
+        <div class="waveform"></div>
+    </div>
+
+    <div class="track-item" data-src="canciones/Sin Seguridad.mp3">
+        <div class="track-header">
+            <button class="play-btn"><i class="fas fa-play"></i></button>
+            <span class="track-name">03. Sin Seguridad</span>
+            <div class="volume-container">
+                <i class="fas fa-volume-up"></i>
+                <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+            </div>
+        </div>
+        <div class="waveform"></div>
+    </div>
+</div>
+<div class="process-gallery">
+    <img src="imagenes/1.jpeg" alt="PORTADA EN PROCESO1" loading="lazy">
+    <img src="imagenes/2.jpeg" alt="PORTADA EN PROCESO2" loading="lazy">
+    <img src="imagenes/3.jpeg" alt="PORTADA EN PROCESO3" loading="lazy">
+    <img src="imagenes/4.jpeg" alt="PORTADA EN PROCESO4" loading="lazy">
+    <img src="imagenes/6.jpeg" alt="PORTADA EN PROCESO6" loading="lazy">
+    <img src="imagenes/7.jpeg" alt="REAPER" loading="lazy">
+</div>
                 </div>
 
                 <div class="release-story-col">
@@ -132,6 +142,15 @@
     
     <div class="carousel-pagination" id="video-pagination"></div>
 </section>
+
+<section class="release-nav section seccion-ancha">
+    <div class="release-nav-container">
+        <a href="index.html#musica" class="nav-btn-back"><i class="fas fa-th"></i> Volver a Galería</a>
+        <a href="to-leave-and-go.html" class="nav-btn-next">Siguiente: To Leave And Go <i class="fas fa-chevron-right"></i></a>
+    </div>
+</section>
+    <button id="back-to-top" title="Volver arriba"><i class="fas fa-arrow-up"></i></button>
+
         <footer>
             <p>© 2026 Antonio Gil. También hago páginas web.</p>
         </footer>

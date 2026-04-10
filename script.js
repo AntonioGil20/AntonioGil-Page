@@ -17,12 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
             videoCover: "portadas/EnAdversidadCover.mp4", 
             portada: "portadas/EnAdversidad.jpg",            
             url: "en-adversidad.html",
-            descripcion: "Este fue el primer EP que grabé. Experimenté mucho con el bajo y pasé semanas mezclando las guitarras para lograr un tono sucio pero claro. Total libertad creativa.",
-            canciones: [
-                { nombre: "01. Ruido Blanco", archivo: "canciones/Ruido Blanco.mp3" },
-                { nombre: "02. En Adversidad", archivo: "canciones/En Adversidad.mp3"},
-                { nombre: "03. Sin Seguridad", archivo: "canciones/Sin Seguridad.mp3" }
-            ]
         },
         {
             id: 2,
@@ -190,26 +184,67 @@ document.addEventListener('DOMContentLoaded', () => {
     fadeElements.forEach(element => appearOnScroll.observe(element));
 
     /* ==========================================================================
-       4. RENDERIZADO DE INTERFAZ (INDEX)
+       4. RENDERIZADO DE INTERFAZ Y NAVEGACIÓN (TRANSICIONES)
        ========================================================================== */
+    const overlay = document.getElementById('page-overlay');
+
+    // Función universal para salir de la página con efecto Fade-Out
+    const navigateWithTransition = (url) => {
+        if (overlay) {
+            overlay.classList.add('active');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500); // 500ms coincide con la transición del CSS
+        } else {
+            window.location.href = url;
+        }
+    };
+
     if (releasesGrid && featuredReleaseContainer) {
+        // Renderizar el Spotify Embed del último lanzamiento
         const latestRelease = miDiscografia[miDiscografia.length - 1]; 
         if (latestRelease && latestRelease.spotify_embed) {
             featuredReleaseContainer.innerHTML = `<div class="featured-badge">Último Lanzamiento</div>${latestRelease.spotify_embed}`;
         }
 
+        // Renderizar la cuadrícula de discos
         miDiscografia.forEach(release => {
             const item = document.createElement('div');
             item.classList.add('release-item');
+            
             let coverHTML = release.videoCover 
                 ? `<video autoplay muted loop playsinline class="release-video-cover"><source src="${release.videoCover}" type="video/mp4"><img src="${release.portada}" alt="${release.titulo}"></video>` 
                 : `<img src="${release.portada}" alt="${release.titulo}">`;
 
-            item.innerHTML = `${coverHTML}<div class="release-title-overlay"><span class="release-title-text">${release.titulo}</span><span class="release-click-hint"><i class="fas fa-play-circle"></i> Ver Detalles</span></div>`;
-            item.addEventListener('click', () => { window.location.href = release.url; });
+            item.innerHTML = `
+                ${coverHTML}
+                <div class="release-title-overlay">
+                    <span class="release-title-text">${release.titulo}</span>
+                    <span class="release-click-hint"><i class="fas fa-play-circle"></i> Ver Detalles</span>
+                </div>`;
+
+            // EVENTO DE CLIC CON TRANSICIÓN
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateWithTransition(release.url);
+            });
+
             releasesGrid.appendChild(item);
         });
     }
+
+    // Aplicar transición a botones de "Siguiente" y "Volver" en páginas de detalle
+    const navButtons = document.querySelectorAll('.nav-btn-back, .nav-btn-next');
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const url = btn.getAttribute('href');
+            // Solo aplicamos la transición si el link NO es un ancla interna (#)
+            if (url && !url.startsWith('#')) {
+                e.preventDefault();
+                navigateWithTransition(url);
+            }
+        });
+    });
 
     /* ==========================================================================
        5. CARRUSEL AUDIOVISUAL
@@ -263,52 +298,76 @@ document.addEventListener('DOMContentLoaded', () => {
        6. FUNCIONALIDADES DETALLE (AUDIO & LIGHTBOX) - CORREGIDO
        ========================================================================== */
 
-    // --- REPRODUCTOR DE AUDIO ---
-    const trackItems = document.querySelectorAll('.track-item');
-    trackItems.forEach(trackDiv => {
-        const audio = trackDiv.querySelector('audio');
-        const playBtn = trackDiv.querySelector('.play-btn');
-        const progressFill = trackDiv.querySelector('.progress-fill');
-        const progressBg = trackDiv.querySelector('.progress-bg');
+    const trackContainers = document.querySelectorAll('.track-item');
+    const wavesurfers = []; // Array para controlar todas las instancias
 
-        if (playBtn && audio) {
-            playBtn.addEventListener('click', () => {
-                if (audio.paused) {
-                    document.querySelectorAll('audio').forEach(a => a.pause());
-                    audio.play();
-                } else {
-                    audio.pause();
-                }
-            });
+if (trackContainers.length > 0) { // <--- AÑADE ESTO
+    const wavesurfers = []; 
+    trackContainers.forEach((container, index) => {        const waveformDiv = container.querySelector('.waveform');
+        const playBtn = container.querySelector('.play-btn');
+        const icon = playBtn.querySelector('i');
+        const volumeSlider = container.querySelector('.volume-slider');
+        const audioSrc = container.getAttribute('data-src');
 
-            audio.addEventListener('play', () => {
-                const icon = playBtn.querySelector('i');
-                if (icon) icon.classList.replace('fa-play', 'fa-pause');
-                playBtn.style.borderColor = 'var(--accent-red)';
-                playBtn.style.color = 'var(--accent-red)';
-            });
+        // Inicializar WaveSurfer para esta pista
+        const ws = WaveSurfer.create({
+            container: waveformDiv,
+            waveColor: '#444',
+            progressColor: '#73263d', // var(--accent-red)
+            cursorColor: '#296858',   // var(--accent-green)
+            barWidth: 2,
+            barGap: 3,
+            responsive: true,
+            height: 60,
+            url: audioSrc,
+        });
 
-            audio.addEventListener('pause', () => {
-                const icon = playBtn.querySelector('i');
-                if (icon) icon.classList.replace('fa-pause', 'fa-play');
-                playBtn.style.borderColor = 'var(--text-color)';
-                playBtn.style.color = 'var(--text-color)';
-            });
+        wavesurfers.push(ws);
 
-            audio.addEventListener('timeupdate', () => {
-                if (audio.duration && progressFill) {
-                    progressFill.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
-                }
-            });
-
-            if (progressBg) {
-                progressBg.addEventListener('click', (e) => {
-                    const rect = progressBg.getBoundingClientRect();
-                    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+        // Control de Play/Pause
+        playBtn.addEventListener('click', () => {
+            if (ws.isPlaying()) {
+                ws.pause();
+            } else {
+                // Detener todos los demás antes de tocar
+                wavesurfers.forEach(otherWs => {
+                    if (otherWs !== ws) otherWs.pause();
                 });
+                ws.play();
             }
+        });
+
+        // Cambiar iconos y estilos al reproducir
+        ws.on('play', () => {
+            icon.classList.replace('fa-play', 'fa-pause');
+            playBtn.style.color = 'var(--accent-red)';
+            playBtn.style.borderColor = 'var(--accent-red)';
+        });
+
+        ws.on('pause', () => {
+            icon.classList.replace('fa-pause', 'fa-play');
+            playBtn.style.color = 'var(--text-color)';
+            playBtn.style.borderColor = 'var(--text-color)';
+        });
+
+        // --- CONTINUIDAD AUTOMÁTICA ---
+        ws.on('finish', () => {
+            const nextIndex = index + 1;
+            if (nextIndex < wavesurfers.length) {
+                wavesurfers[nextIndex].play();
+                // Opcional: Hacer scroll suave hacia la siguiente canción
+                trackContainers[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        // --- CONTROL DE VOLUMEN ---
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                ws.setVolume(e.target.value);
+            });
         }
     });
+} // <--- CIERRE DE ESTE BLOQUE
 
     // --- GALERÍA LIGHTBOX ---
     const galleryImages = document.querySelectorAll('.process-gallery img');
@@ -355,5 +414,47 @@ document.addEventListener('DOMContentLoaded', () => {
         lightbox.addEventListener('click', closeFunc);
         document.addEventListener('keydown', closeFunc);
     }
+
+// --- ScrollSpy: Indicador de sección activa (Solo en Index) ---
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('section[id], header[id]');
+
+    // Solo ejecutamos si hay secciones en la página actual (evita errores en páginas de detalle)
+    if (sections.length > 0 && document.getElementById('inicio')) {
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 250)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                // Verificamos si el href del link coincide exactamente con el ID actual
+                if (link.getAttribute('href') === `#${current}` || link.getAttribute('href').includes(`#${current}`)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    } else {
+        // Si estamos en una página de detalle, simplemente removemos cualquier clase active
+        navLinks.forEach(link => link.classList.remove('active'));
+    }
+
+    // --- Lógica del Botón Volver Arriba ---
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 500) {
+            backToTopBtn.style.display = 'block';
+        } else {
+            backToTopBtn.style.display = 'none';
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
 }); // CIERRE ÚNICO DE DOMCONTENTLOADED
