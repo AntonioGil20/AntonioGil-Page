@@ -946,6 +946,9 @@ audio {
     color: var(--text-color); /* Resalta el nombre de la canción en blanco brillante */
 }
 
+/* ==========================================================================
+   NAVEGACIÓN ENTRE LANZAMIENTOS (DETALLE)
+   ========================================================================== */
 .release-nav-container {
     display: flex;
     justify-content: space-between;
@@ -953,6 +956,7 @@ audio {
     padding: 40px 0;
     border-top: 1px solid #222;
     margin-top: 50px;
+    width: 100%;
 }
 
 .nav-btn-back, .nav-btn-next {
@@ -961,12 +965,25 @@ audio {
     font-family: var(--font-nav);
     text-transform: uppercase;
     letter-spacing: 2px;
-    transition: color 0.3s;
+    transition: all 0.3s ease;
     font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
+/* Color al pasar el mouse */
 .nav-btn-back:hover, .nav-btn-next:hover {
     color: var(--accent-red);
+}
+
+/* Ajuste para que en móviles no se amontonen */
+@media (max-width: 480px) {
+    .release-nav-container {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
 }
 
 /* ==========================================================================

@@ -437,6 +437,7 @@ if (trackContainers.length > 0) { // <--- AÑADE ESTO
                     link.classList.add('active');
                 }
             });
+            
         });
     } else {
         // Si estamos en una página de detalle, simplemente removemos cualquier clase active
