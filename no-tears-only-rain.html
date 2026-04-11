@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>No Tears Only Rain - Antonio Gil</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <meta property="og:title" content="Antonio Gil - No Tears Only Rain">
+    <meta property="og:description" content="Agrega aquí la historia detrás de este lanzamiento...">
+    <meta property="og:image" content="portadas/NoTearsOnlyRain.jpg"> 
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://unpkg.com/wavesurfer.js@7"></script>
+</head>
+<body>
+
+    <div class="page-transition" id="page-overlay"></div>
+    <div class="scanlines"></div> 
+
+    <nav>
+        <div class="nav-left">
+            <ul class="nav-links">
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="index.html#musica">Música</a></li>
+                <li><a href="index.html#audiovisual">Audiovisual</a></li>
+            </ul>
+        </div>
+        <div class="social-icons">
+            <a href="https://open.spotify.com/intl-es/artist/4WdEQjjlFafEZ5Q8nBNJSe?si=TgZK9GUVQjmF9KOacD5lLA" target="_blank" title="Spotify"><i class="fab fa-spotify"></i></a>
+            <a href="https://music.apple.com/us/artist/antonio-gil/1642577020" target="_blank" title="Apple Music"><i class="fa-solid fa-music"></i></a>
+            <a href="https://www.youtube.com/@AntonioGilopz/videos" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.instagram.com/antoniogilopz/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+    </nav>
+
+    <main class="content-wrapper">
+        <section class="section seccion-ancha">
+            <div class="release-detail-container fade-in visible">
+                
+                <div class="release-media-col">
+                    
+                    <video autoplay muted loop playsinline>
+                        <source src="portadas/NoTearsOnlyRainCover.mp4" type="video/mp4">
+                        <img src="portadas/NoTearsOnlyRain.jpg" alt="No Tears Only Rain">
+                    </video>
+
+                    <div class="tracklist" id="tracklist-container">
+                        
+                        <div class="track-item" data-src="canciones/Horses & Trains.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">01. Horses & Trains</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/Plastic Demons.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">02. Plastic Demons</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/The Night Is Young, Walk On Girl.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">03. The Night Is Young, Walk On Girl</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/Bizarre Guests.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">04. Bizarre Guests</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/Alien Dust.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">05. Alien Dust</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/A Message To The Past.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">06. A Message To The Past</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/Playing The Game.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">07. Playing The Game</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/London Bridge Is Falling Down.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">08. London Bridge Is Falling Down</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/The Shepherd Man.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">09. The Shepherd Man</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/Can We Shower In The Rain.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">10. Can We Shower In The Rain?</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                        <div class="track-item" data-src="canciones/DOING DETOX.mp3">
+                            <div class="track-header">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                                <span class="track-name">11. DOING DETOX</span>
+                                <div class="volume-container">
+                                    <i class="fas fa-volume-up"></i>
+                                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8">
+                                </div>
+                            </div>
+                            <div class="waveform"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="process-gallery">
+                        <img src="[RUTA_IMAGEN_1.jpg]" alt="Proceso 1" loading="lazy">
+                        <img src="[RUTA_IMAGEN_2.jpg]" alt="Proceso 2" loading="lazy">
+                        <img src="[RUTA_IMAGEN_3.jpg]" alt="Proceso 3" loading="lazy">
+                    </div>
+                </div>
+
+                <div class="release-story-col">
+                    <h1>No Tears Only Rain</h1>
+                    <p class="release-date">LANZAMIENTO: [FECHA DE LANZAMIENTO]</p>
+
+                    <div class="story-block">
+                        <h3>[TÍTULO DEL BLOQUE 1 - Ej. El Concepto]</h3>
+                        <p>Agrega aquí la historia detrás de este lanzamiento...</p>                        
+                    </div>
+
+                    <div class="story-block">
+                        <h3>[TÍTULO DEL BLOQUE 2 - Ej. Proceso Creativo]</h3>
+                        <p>[Párrafo sobre la grabación, anécdotas...]</p>
+                    </div>
+
+                    <div class="story-block" style="border-left-color: var(--accent-red);">
+                        <h3>[TÍTULO DEL BLOQUE 3 - Ej. El Arte Visual]</h3>
+                        <p>[Párrafo sobre la portada o estética visual...]</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="audiovisual" class="section seccion-ancha fade-in">
+            <h2 class="section-title">Videos Relacionados</h2>
+            
+            <div class="carousel-track" id="video-track">
+                <div class="video-item">
+                    <iframe src="https://www.youtube.com/embed/[ID_DEL_VIDEO]" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-item">
+                    <iframe src="https://www.youtube.com/embed/[ID_DEL_VIDEO]" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <div class="carousel-pagination" id="video-pagination"></div>
+        </section>
+
+        <section class="release-nav section seccion-ancha">
+            <div class="release-nav-container">
+                <a href="[ARCHIVO_ANTERIOR.html]" class="nav-btn-back"><i class="fas fa-chevron-left"></i> Anterior: [TÍTULO ANTERIOR]</a>
+                
+                <a href="[ARCHIVO_SIGUIENTE.html]" class="nav-btn-next">Siguiente: [TÍTULO SIGUIENTE] <i class="fas fa-chevron-right"></i></a>
+            </div>
+        </section>
+        
+        <button id="back-to-top" title="Volver arriba"><i class="fas fa-arrow-up"></i></button>
+
+        <footer>
+            <p>© 2026 Antonio Gil. También hago páginas web.</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-btn" id="close-lightbox" title="Cerrar (Esc)"><i class="fas fa-times"></i></button>
+        <button class="lightbox-btn" id="prev-lightbox" title="Anterior (←)"><i class="fas fa-chevron-left"></i></button>
+        <img id="lightbox-img" src="" alt="Vista previa de galería">
+        <button class="lightbox-btn" id="next-lightbox" title="Siguiente (→)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+</body>
+</html>
