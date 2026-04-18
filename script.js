@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 4,
-            titulo: "Esto Es Un Musical",
+            titulo: "Bajo Los Pies",
             videoCover: "portadas/EstoEsUnMusicalCover.mp4",
             portada: "portadas/EstoEsUnMusical.jpg",
-            url: "esto-es-un-musical.html",
+            url: "bajo-los-pies.html",
         },
         {
             id: 5,
