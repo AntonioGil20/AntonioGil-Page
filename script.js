@@ -8,6 +8,25 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     /* ==========================================================================
+       0. PRELOADER (PANTALLA DE CARGA)
+       ========================================================================== */
+    // window.addEventListener('load') espera a que los videos y portadas estén listos
+    window.addEventListener('load', () => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            // Forzamos un mínimo de 1.5 segundos (1500ms) para que el efecto se luzca
+            setTimeout(() => {
+                preloader.classList.add('hidden');
+                
+                // Lo removemos del DOM después de que termine el desvanecimiento para ahorrar memoria
+                setTimeout(() => {
+                    preloader.remove();
+                }, 800);
+            }, 1500); 
+        }
+    });
+
+    /* ==========================================================================
        1. BASE DE DATOS (DISCOGRAFÍA)
        ========================================================================== */
     const miDiscografia = [

@@ -1093,3 +1093,64 @@ audio {
         justify-content: center;
     }
 }
+
+/* ==========================================================================
+   PRELOADER (PANTALLA DE CARGA VHS/CONSOLA)
+   ========================================================================== */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #050505; /* Un negro un poco más profundo que el bg-color */
+    z-index: 10000; /* Por encima de todo, incluso del overlay de transición */
+    display: flex;
+    align-items: flex-start; /* Para que el texto quede arriba a la izquierda como una cámara */
+    padding: 40px;
+    font-family: var(--font-main); /* Courier New */
+    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+}
+
+.preloader-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rec-text {
+    color: #f4f4f4;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.blink-dot {
+    color: var(--accent-red);
+    animation: blink 1s step-end infinite;
+}
+
+.os-text {
+    color: #646464;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typeWriter 1.5s steps(30, end);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes typeWriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Clase que añadiremos con JS para desaparecerlo suavemente */
+#preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
