@@ -183,8 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.classList.add('release-item');
             
+            // 1. Quitamos autoplay y añadimos la imagen como "poster"
             let coverHTML = release.videoCover 
-                ? `<video autoplay muted loop playsinline class="release-video-cover"><source src="${release.videoCover}" type="video/mp4"><img src="${release.portada}" alt="${release.titulo}"></video>` 
+                ? `<video muted loop playsinline class="release-video-cover" poster="${release.portada}">
+                     <source src="${release.videoCover}" type="video/mp4">
+                   </video>` 
                 : `<img src="${release.portada}" alt="${release.titulo}">`;
 
             item.innerHTML = `
@@ -193,6 +196,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="release-title-text">${release.titulo}</span>
                     <span class="release-click-hint"><i class="fas fa-play-circle"></i> Ver Detalles</span>
                 </div>`;
+
+            // 2. Lógica para reproducir SOLO cuando el mouse pasa por encima (Hover)
+            const videoElement = item.querySelector('video');
+            if (videoElement) {
+                item.addEventListener('mouseenter', () => {
+                    // Intenta reproducir el video
+                    videoElement.play().catch(e => console.log("Reproducción prevenida por el navegador"));
+                });
+                
+                item.addEventListener('mouseleave', () => {
+                    // Pausa el video al quitar el mouse
+                    videoElement.pause();
+                    
+                    // Opcional: Descomenta la siguiente línea si quieres que el video 
+                    // vuelva a empezar desde el segundo 0 cada que quitan el mouse
+                    // videoElement.currentTime = 0; 
+                });
+            }
 
             // EVENTO DE CLIC CON TRANSICIÓN
             item.addEventListener('click', (e) => {
@@ -266,79 +287,154 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       6. FUNCIONALIDADES DETALLE (AUDIO & LIGHTBOX) - CORREGIDO
+       6. FUNCIONALIDADES DETALLE (AUDIO, LIGHTBOX & STICKY PLAYER)
        ========================================================================== */
 
     const trackContainers = document.querySelectorAll('.track-item');
-    const wavesurfers = []; // Array para controlar todas las instancias
+    
+    if (trackContainers.length > 0) { 
+        // 1. INYECTAR EL STICKY PLAYER EN EL DOM AUTOMÁTICAMENTE
+        const stickyPlayerHTML = `
+            <div id="sticky-player">
+                <div class="sticky-controls">
+                    <button id="sticky-prev-btn" class="sticky-nav-btn" title="Anterior"><i class="fas fa-step-backward"></i></button>
+                    <button id="sticky-play-btn" title="Reproducir/Pausar"><i class="fas fa-play"></i></button>
+                    <button id="sticky-next-btn" class="sticky-nav-btn" title="Siguiente"><i class="fas fa-step-forward"></i></button>
+                </div>
+                <span id="sticky-track-name">Selecciona una pista</span>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', stickyPlayerHTML);
 
-if (trackContainers.length > 0) { // <--- AÑADE ESTO
-    const wavesurfers = []; 
-    trackContainers.forEach((container, index) => {        const waveformDiv = container.querySelector('.waveform');
-        const playBtn = container.querySelector('.play-btn');
-        const icon = playBtn.querySelector('i');
-        const volumeSlider = container.querySelector('.volume-slider');
-        const audioSrc = container.getAttribute('data-src');
+        // Referencias a los elementos
+        const stickyPlayer = document.getElementById('sticky-player');
+        const stickyPlayBtn = document.getElementById('sticky-play-btn');
+        const stickyPrevBtn = document.getElementById('sticky-prev-btn');
+        const stickyNextBtn = document.getElementById('sticky-next-btn');
+        const stickyPlayIcon = stickyPlayBtn.querySelector('i');
+        const stickyTrackName = document.getElementById('sticky-track-name');
+        const tracklistContainer = document.getElementById('tracklist-container');
 
-        // Inicializar WaveSurfer para esta pista
-        const ws = WaveSurfer.create({
-            container: waveformDiv,
-            waveColor: '#444',
-            progressColor: '#73263d', // var(--accent-red)
-            cursorColor: '#296858',   // var(--accent-green)
-            barWidth: 2,
-            barGap: 3,
-            responsive: true,
-            height: 60,
-            url: audioSrc,
-        });
+        const wavesurfers = []; 
+        let currentActiveWs = null; 
+        let currentActiveIndex = -1; // Nos ayuda a saber qué número de canción está sonando
 
-        wavesurfers.push(ws);
+        trackContainers.forEach((container, index) => {
+            const waveformDiv = container.querySelector('.waveform');
+            const playBtn = container.querySelector('.play-btn');
+            const icon = playBtn.querySelector('i');
+            const volumeSlider = container.querySelector('.volume-slider');
+            const audioSrc = container.getAttribute('data-src');
+            const trackNameText = container.querySelector('.track-name').innerText; 
 
-        // Control de Play/Pause
-        playBtn.addEventListener('click', () => {
-            if (ws.isPlaying()) {
-                ws.pause();
-            } else {
-                // Detener todos los demás antes de tocar
-                wavesurfers.forEach(otherWs => {
-                    if (otherWs !== ws) otherWs.pause();
-                });
-                ws.play();
-            }
-        });
-
-        // Cambiar iconos y estilos al reproducir
-        ws.on('play', () => {
-            icon.classList.replace('fa-play', 'fa-pause');
-            playBtn.style.color = 'var(--accent-red)';
-            playBtn.style.borderColor = 'var(--accent-red)';
-        });
-
-        ws.on('pause', () => {
-            icon.classList.replace('fa-pause', 'fa-play');
-            playBtn.style.color = 'var(--text-color)';
-            playBtn.style.borderColor = 'var(--text-color)';
-        });
-
-        // --- CONTINUIDAD AUTOMÁTICA ---
-        ws.on('finish', () => {
-            const nextIndex = index + 1;
-            if (nextIndex < wavesurfers.length) {
-                wavesurfers[nextIndex].play();
-                // Opcional: Hacer scroll suave hacia la siguiente canción
-                trackContainers[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
-
-        // --- CONTROL DE VOLUMEN ---
-        if (volumeSlider) {
-            volumeSlider.addEventListener('input', (e) => {
-                ws.setVolume(e.target.value);
+            // Inicializar WaveSurfer
+            const ws = WaveSurfer.create({
+                container: waveformDiv,
+                waveColor: '#444',
+                progressColor: '#73263d', 
+                cursorColor: '#296858',   
+                barWidth: 2,
+                barGap: 3,
+                responsive: true,
+                height: 60,
+                url: audioSrc,
             });
-        }
-    });
-} // <--- CIERRE DE ESTE BLOQUE
+
+            wavesurfers.push(ws);
+
+            playBtn.addEventListener('click', () => {
+                if (ws.isPlaying()) {
+                    ws.pause();
+                } else {
+                    wavesurfers.forEach(otherWs => {
+                        if (otherWs !== ws) otherWs.pause();
+                    });
+                    ws.play();
+                }
+            });
+
+            // Al Reproducir
+            ws.on('play', () => {
+                icon.classList.replace('fa-play', 'fa-pause');
+                playBtn.style.color = 'var(--accent-red)';
+                playBtn.style.borderColor = 'var(--accent-red)';
+                
+                // Sincronizar Sticky Player
+                currentActiveWs = ws;
+                currentActiveIndex = index; // Guardamos el índice actual
+                stickyTrackName.innerText = trackNameText;
+                stickyPlayIcon.classList.replace('fa-play', 'fa-pause');
+            });
+
+            // Al Pausar
+            ws.on('pause', () => {
+                icon.classList.replace('fa-pause', 'fa-play');
+                playBtn.style.color = 'var(--text-color)';
+                playBtn.style.borderColor = 'var(--text-color)';
+                
+                if (currentActiveWs === ws) {
+                    stickyPlayIcon.classList.replace('fa-pause', 'fa-play');
+                }
+            });
+
+            // Continuidad Automática al terminar
+            ws.on('finish', () => {
+                const nextIndex = index + 1;
+                if (nextIndex < wavesurfers.length) {
+                    wavesurfers[nextIndex].play();
+                }
+            });
+
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', (e) => {
+                    ws.setVolume(e.target.value);
+                });
+            }
+        });
+
+        // 2. LÓGICA DE LOS BOTONES DEL STICKY PLAYER
+        stickyPlayBtn.addEventListener('click', () => {
+            if (currentActiveWs) {
+                if (currentActiveWs.isPlaying()) {
+                    currentActiveWs.pause();
+                } else {
+                    currentActiveWs.play();
+                }
+            }
+        });
+
+        stickyPrevBtn.addEventListener('click', () => {
+            if (currentActiveIndex > 0) {
+                if (currentActiveWs) currentActiveWs.pause();
+                wavesurfers[currentActiveIndex - 1].play(); // Reproducir anterior
+            }
+        });
+
+        stickyNextBtn.addEventListener('click', () => {
+            if (currentActiveIndex >= 0 && currentActiveIndex < wavesurfers.length - 1) {
+                if (currentActiveWs) currentActiveWs.pause();
+                wavesurfers[currentActiveIndex + 1].play(); // Reproducir siguiente
+            } else if (currentActiveIndex === wavesurfers.length - 1) {
+                // Si es la última canción, volver al inicio del álbum
+                if (currentActiveWs) currentActiveWs.pause();
+                wavesurfers[0].play();
+            }
+        });
+
+        // 3. LÓGICA DE SCROLL PARA MOSTRAR/OCULTAR
+        window.addEventListener('scroll', () => {
+            if (currentActiveWs) {
+                const rect = tracklistContainer.getBoundingClientRect();
+                if (rect.bottom < 0) {
+                    stickyPlayer.classList.add('visible');
+                    document.body.classList.add('player-active');
+                } else {
+                    stickyPlayer.classList.remove('visible');
+                    document.body.classList.remove('player-active');
+                }
+            }
+        });
+    }
 
     // --- GALERÍA LIGHTBOX ---
     const galleryImages = document.querySelectorAll('.process-gallery img');

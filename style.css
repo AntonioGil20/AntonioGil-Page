@@ -424,7 +424,8 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(115, 38, 61, 0.9); 
+    /* Cambiamos el fondo rojo (rgba(115, 38, 61, 0.9)) por un fondo negro semitransparente */
+    background-color: rgba(0, 0, 0, 0.4); 
     display: flex;
     flex-direction: column; 
     align-items: center;
@@ -1091,6 +1092,108 @@ audio {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   11. BARRA DE REPRODUCCIÓN FLOTANTE (STICKY PLAYER)
+   ========================================================================== */
+#sticky-player {
+    position: fixed;
+    bottom: -100px; /* Oculto por defecto debajo de la pantalla */
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--accent-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 20px;
+    z-index: 9000;
+    transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
+    gap: 20px;
+}
+
+#sticky-player.visible {
+    bottom: 0;
+}
+
+/* NUEVO: Contenedor para agrupar los 3 botones */
+.sticky-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* NUEVO: Estilos para botones de "Siguiente" y "Anterior" */
+.sticky-nav-btn {
+    background: transparent;
+    border: 2px solid #444;
+    color: #888;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.sticky-nav-btn:hover {
+    border-color: var(--text-color);
+    color: var(--text-color);
+    transform: scale(1.1);
+}
+
+#sticky-play-btn {
+    background: transparent;
+    border: 2px solid var(--accent-green);
+    color: var(--accent-green);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+#sticky-play-btn:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+    transform: scale(1.1);
+}
+
+#sticky-track-name {
+    font-family: var(--font-nav);
+    color: var(--text-color);
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+}
+
+@media (max-width: 768px) {
+    #sticky-player {
+        padding: 10px 15px;
+        gap: 15px;
+    }
+    #sticky-track-name {
+        font-size: 1rem;
+    }
+    .sticky-controls {
+        gap: 10px;
+    }
+    body.player-active #back-to-top {
+        bottom: 80px; 
     }
 }
 
